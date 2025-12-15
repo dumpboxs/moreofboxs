@@ -13,6 +13,7 @@ export const AppLogo = ({ className }: { className?: string }) => {
       to="/"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.9 }}
+      viewTransition={true}
       className="size-fit"
     >
       <BoxsIcon className={cn(className)} />

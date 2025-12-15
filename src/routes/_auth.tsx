@@ -1,12 +1,14 @@
 import { Outlet, createFileRoute } from '@tanstack/react-router'
 import { fallback, zodValidator } from '@tanstack/zod-adapter'
 import * as z from 'zod'
+import { requireGuestMiddleware } from '@/middleware/auth'
 
 const redirectSearchSchema = z.object({
   redirect_to: fallback(z.string().optional(), ''),
 })
 export const Route = createFileRoute('/_auth')({
   validateSearch: zodValidator(redirectSearchSchema),
+  server: { middleware: [requireGuestMiddleware] },
   component: RouteComponent,
 })
 

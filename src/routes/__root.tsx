@@ -14,6 +14,7 @@ import TanStackQueryDevtools from '@/integrations/tanstack-query/devtools'
 import appCss from '@/styles/app.css?url'
 import { APP_CONSTANTS } from '@/constants'
 import { Toaster } from '@/components/ui/sonner'
+import { getAuthSession } from '@/functions/get-auth-session'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -59,6 +60,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
   shellComponent: RootDocument,
   component: RootComponent,
+  beforeLoad: async () => {
+    const auth = await getAuthSession()
+    return { auth }
+  },
 })
 
 function RootComponent() {
