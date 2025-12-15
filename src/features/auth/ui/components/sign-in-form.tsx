@@ -83,7 +83,7 @@ export const SignInForm = () => {
                   aria-invalid={isInvalid}
                   disabled={isPending}
                   placeholder="Enter your password"
-                  autoComplete="new-password"
+                  autoComplete="current-password"
                 />
 
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
