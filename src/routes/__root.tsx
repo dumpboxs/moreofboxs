@@ -12,6 +12,7 @@ import type { QueryClient } from '@tanstack/react-query'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import TanStackQueryDevtools from '@/integrations/tanstack-query/devtools'
 import appCss from '@/styles/app.css?url'
+import { APP_CONSTANTS } from '@/constants'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -28,13 +29,29 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: `${APP_CONSTANTS.name} - mrboxs`,
+      },
+      {
+        name: 'description',
+        content: APP_CONSTANTS.description,
       },
     ],
     links: [
       {
         rel: 'stylesheet',
         href: appCss,
+      },
+      {
+        media: '(prefers-color-scheme: dark)',
+        rel: 'icon',
+        href: APP_CONSTANTS.favicons.dark,
+        url: APP_CONSTANTS.favicons.dark,
+      },
+      {
+        media: '(prefers-color-scheme: light)',
+        rel: 'icon',
+        href: APP_CONSTANTS.favicons.light,
+        url: APP_CONSTANTS.favicons.light,
       },
     ],
   }),
