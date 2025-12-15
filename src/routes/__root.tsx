@@ -9,6 +9,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
 import type { QueryClient } from '@tanstack/react-query'
 
+import { ThemeProvider } from '@/components/providers/theme-provider'
 import TanStackQueryDevtools from '@/integrations/tanstack-query/devtools'
 import appCss from '@/styles/app.css?url'
 
@@ -45,7 +46,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function RootComponent() {
   return (
     <RootDocument>
-      <Outlet />
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <Outlet />
+      </ThemeProvider>
     </RootDocument>
   )
 }
