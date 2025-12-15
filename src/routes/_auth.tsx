@@ -3,7 +3,7 @@ import { fallback, zodValidator } from '@tanstack/zod-adapter'
 import * as z from 'zod'
 
 const redirectSearchSchema = z.object({
-  redirect_to: fallback(z.string().optional(), '').default(''),
+  redirect_to: fallback(z.string().optional(), ''),
 })
 export const Route = createFileRoute('/_auth')({
   validateSearch: zodValidator(redirectSearchSchema),
