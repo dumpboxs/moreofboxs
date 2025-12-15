@@ -13,6 +13,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider'
 import TanStackQueryDevtools from '@/integrations/tanstack-query/devtools'
 import appCss from '@/styles/app.css?url'
 import { APP_CONSTANTS } from '@/constants'
+import { Toaster } from '@/components/ui/sonner'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -65,6 +66,7 @@ function RootComponent() {
     <RootDocument>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Outlet />
+        <Toaster position="top-center" richColors />
       </ThemeProvider>
     </RootDocument>
   )
