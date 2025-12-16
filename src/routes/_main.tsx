@@ -1,5 +1,6 @@
 import { Outlet, createFileRoute } from '@tanstack/react-router'
 import { MainHeader } from '@/features/main/components/main-header'
+import { MainFooter } from '@/features/main/components/main-footer'
 
 export const Route = createFileRoute('/_main')({
   component: RouteComponent,
@@ -12,6 +13,7 @@ function RouteComponent() {
       <main className="flex grow flex-col">
         <Outlet />
       </main>
+      <MainFooter />
     </div>
   )
 }

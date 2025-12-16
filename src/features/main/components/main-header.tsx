@@ -15,7 +15,7 @@ export const MainHeader = () => {
 
   return (
     <header className="bg-background/65 supports-backdrop-filter:bg-background/65 fixed top-0 right-0 left-0 z-50 h-16 w-full border-b border-dashed backdrop-blur-sm">
-      <div className="container flex h-full items-center justify-between p-4">
+      <div className="container flex h-full items-center justify-between border-dashed p-4 lg:border-x">
         <div className="flex items-center gap-4">
           <AppLogo className="size-7" />
           <NavHeaderDesktop />
