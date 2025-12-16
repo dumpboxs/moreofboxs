@@ -9,6 +9,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
 import type { QueryClient } from '@tanstack/react-query'
 
+import type { orpc } from '@/orpc/client'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import TanStackQueryDevtools from '@/integrations/tanstack-query/devtools'
 import appCss from '@/styles/app.css?url'
@@ -17,6 +18,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { getAuthSession } from '@/functions/get-auth-session'
 
 interface MyRouterContext {
+  orpc: typeof orpc
   queryClient: QueryClient
 }
 

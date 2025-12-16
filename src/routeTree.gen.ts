@@ -12,11 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as MainRouteImport } from './routes/_main'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as MainIndexRouteImport } from './routes/_main/index'
+import { Route as MainProfileRouteImport } from './routes/_main/profile'
 import { Route as MainContactRouteImport } from './routes/_main/contact'
 import { Route as MainBlogsRouteImport } from './routes/_main/blogs'
 import { Route as MainAboutRouteImport } from './routes/_main/about'
 import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
+import { Route as ApiOrpcSplatRouteImport } from './routes/api/orpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 
 const MainRoute = MainRouteImport.update({
@@ -30,6 +32,11 @@ const AuthRoute = AuthRouteImport.update({
 const MainIndexRoute = MainIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainProfileRoute = MainProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => MainRoute,
 } as any)
 const MainContactRoute = MainContactRouteImport.update({
@@ -57,6 +64,11 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => AuthRoute,
 } as any)
+const ApiOrpcSplatRoute = ApiOrpcSplatRouteImport.update({
+  id: '/api/orpc/$',
+  path: '/api/orpc/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -69,8 +81,10 @@ export interface FileRoutesByFullPath {
   '/about': typeof MainAboutRoute
   '/blogs': typeof MainBlogsRoute
   '/contact': typeof MainContactRoute
+  '/profile': typeof MainProfileRoute
   '/': typeof MainIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/orpc/$': typeof ApiOrpcSplatRoute
 }
 export interface FileRoutesByTo {
   '/sign-in': typeof AuthSignInRoute
@@ -78,8 +92,10 @@ export interface FileRoutesByTo {
   '/about': typeof MainAboutRoute
   '/blogs': typeof MainBlogsRoute
   '/contact': typeof MainContactRoute
+  '/profile': typeof MainProfileRoute
   '/': typeof MainIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/orpc/$': typeof ApiOrpcSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -90,8 +106,10 @@ export interface FileRoutesById {
   '/_main/about': typeof MainAboutRoute
   '/_main/blogs': typeof MainBlogsRoute
   '/_main/contact': typeof MainContactRoute
+  '/_main/profile': typeof MainProfileRoute
   '/_main/': typeof MainIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/orpc/$': typeof ApiOrpcSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,8 +119,10 @@ export interface FileRouteTypes {
     | '/about'
     | '/blogs'
     | '/contact'
+    | '/profile'
     | '/'
     | '/api/auth/$'
+    | '/api/orpc/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/sign-in'
@@ -110,8 +130,10 @@ export interface FileRouteTypes {
     | '/about'
     | '/blogs'
     | '/contact'
+    | '/profile'
     | '/'
     | '/api/auth/$'
+    | '/api/orpc/$'
   id:
     | '__root__'
     | '/_auth'
@@ -121,14 +143,17 @@ export interface FileRouteTypes {
     | '/_main/about'
     | '/_main/blogs'
     | '/_main/contact'
+    | '/_main/profile'
     | '/_main/'
     | '/api/auth/$'
+    | '/api/orpc/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   MainRoute: typeof MainRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiOrpcSplatRoute: typeof ApiOrpcSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,6 +177,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof MainIndexRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/profile': {
+      id: '/_main/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof MainProfileRouteImport
       parentRoute: typeof MainRoute
     }
     '/_main/contact': {
@@ -189,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignInRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/api/orpc/$': {
+      id: '/api/orpc/$'
+      path: '/api/orpc/$'
+      fullPath: '/api/orpc/$'
+      preLoaderRoute: typeof ApiOrpcSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -215,6 +254,7 @@ interface MainRouteChildren {
   MainAboutRoute: typeof MainAboutRoute
   MainBlogsRoute: typeof MainBlogsRoute
   MainContactRoute: typeof MainContactRoute
+  MainProfileRoute: typeof MainProfileRoute
   MainIndexRoute: typeof MainIndexRoute
 }
 
@@ -222,6 +262,7 @@ const MainRouteChildren: MainRouteChildren = {
   MainAboutRoute: MainAboutRoute,
   MainBlogsRoute: MainBlogsRoute,
   MainContactRoute: MainContactRoute,
+  MainProfileRoute: MainProfileRoute,
   MainIndexRoute: MainIndexRoute,
 }
 
@@ -231,6 +272,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   MainRoute: MainRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiOrpcSplatRoute: ApiOrpcSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
