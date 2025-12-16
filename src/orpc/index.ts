@@ -3,9 +3,9 @@ import { db } from '@/configs/db'
 import { auth } from '@/lib/auth'
 import { env } from '@/configs/env'
 
-export const createORPCContext = async ({ req }: { req: Request }) => {
+export const createORPCContext = async (opts: { headers: Headers }) => {
   const session = await auth.api.getSession({
-    headers: req.headers,
+    headers: opts.headers,
   })
 
   return {

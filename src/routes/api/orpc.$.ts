@@ -59,16 +59,22 @@ const apiHandler = new OpenAPIHandler(orpcRouter, {
   ],
 })
 
+const createContext = async (req: Request) => {
+  return createORPCContext({ headers: req.headers })
+}
+
 async function handle({ request }: { request: Request }) {
+  const context = await createContext(request)
+
   const rpcResult = await rpcHandler.handle(request, {
     prefix: '/api/orpc',
-    context: await createORPCContext({ req: request }),
+    context,
   })
   if (rpcResult.response) return rpcResult.response
 
   const apiResult = await apiHandler.handle(request, {
     prefix: '/api/orpc/api-reference',
-    context: await createORPCContext({ req: request }),
+    context,
   })
   if (apiResult.response) return apiResult.response
 
