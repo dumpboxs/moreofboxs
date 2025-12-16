@@ -14,6 +14,7 @@ import { tanstackStartCookies } from 'better-auth/tanstack-start'
 import { env } from '@/configs/env'
 import { db } from '@/configs/db'
 import { APP_CONSTANTS } from '@/constants'
+import { UserRole } from '@/generated/prisma/enums'
 
 export const auth = betterAuth({
   appName: APP_CONSTANTS.name,
@@ -30,8 +31,36 @@ export const auth = betterAuth({
     minPasswordLength: 8,
     maxPasswordLength: 128,
   },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          const adminEmails = env.ADMIN_EMAILS.includes(user.email)
+
+          if (adminEmails) {
+            return {
+              data: {
+                ...user,
+                role: UserRole.admin,
+              },
+            }
+          }
+
+          return {
+            data: {
+              ...user,
+              role: UserRole.user,
+            },
+          }
+        },
+      },
+    },
+  },
   plugins: [
-    adminPlugin(),
+    adminPlugin({
+      adminRoles: [UserRole.admin],
+      defaultRole: UserRole.user,
+    }),
     anonymousPlugin(),
     bearerPlugin(),
     jwtPlugin(),

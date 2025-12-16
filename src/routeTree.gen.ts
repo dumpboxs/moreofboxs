@@ -9,20 +9,43 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as MainRouteImport } from './routes/_main'
 import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as MainIndexRouteImport } from './routes/_main/index'
+import { Route as MainContactRouteImport } from './routes/_main/contact'
+import { Route as MainBlogsRouteImport } from './routes/_main/blogs'
+import { Route as MainAboutRouteImport } from './routes/_main/about'
 import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 
+const MainRoute = MainRouteImport.update({
+  id: '/_main',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const MainIndexRoute = MainIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRoute,
+} as any)
+const MainContactRoute = MainContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainBlogsRoute = MainBlogsRouteImport.update({
+  id: '/blogs',
+  path: '/blogs',
+  getParentRoute: () => MainRoute,
+} as any)
+const MainAboutRoute = MainAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => MainRoute,
 } as any)
 const AuthSignUpRoute = AuthSignUpRouteImport.update({
   id: '/sign-up',
@@ -41,47 +64,82 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
+  '/about': typeof MainAboutRoute
+  '/blogs': typeof MainBlogsRoute
+  '/contact': typeof MainContactRoute
+  '/': typeof MainIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
+  '/about': typeof MainAboutRoute
+  '/blogs': typeof MainBlogsRoute
+  '/contact': typeof MainContactRoute
+  '/': typeof MainIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
+  '/_main': typeof MainRouteWithChildren
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_auth/sign-up': typeof AuthSignUpRoute
+  '/_main/about': typeof MainAboutRoute
+  '/_main/blogs': typeof MainBlogsRoute
+  '/_main/contact': typeof MainContactRoute
+  '/_main/': typeof MainIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sign-in' | '/sign-up' | '/api/auth/$'
+  fullPaths:
+    | '/sign-in'
+    | '/sign-up'
+    | '/about'
+    | '/blogs'
+    | '/contact'
+    | '/'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sign-in' | '/sign-up' | '/api/auth/$'
+  to:
+    | '/sign-in'
+    | '/sign-up'
+    | '/about'
+    | '/blogs'
+    | '/contact'
+    | '/'
+    | '/api/auth/$'
   id:
     | '__root__'
-    | '/'
     | '/_auth'
+    | '/_main'
     | '/_auth/sign-in'
     | '/_auth/sign-up'
+    | '/_main/about'
+    | '/_main/blogs'
+    | '/_main/contact'
+    | '/_main/'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
+  MainRoute: typeof MainRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_main': {
+      id: '/_main'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MainRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_auth': {
       id: '/_auth'
       path: ''
@@ -89,12 +147,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_main/': {
+      id: '/_main/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof MainIndexRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/contact': {
+      id: '/_main/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof MainContactRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/blogs': {
+      id: '/_main/blogs'
+      path: '/blogs'
+      fullPath: '/blogs'
+      preLoaderRoute: typeof MainBlogsRouteImport
+      parentRoute: typeof MainRoute
+    }
+    '/_main/about': {
+      id: '/_main/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof MainAboutRouteImport
+      parentRoute: typeof MainRoute
     }
     '/_auth/sign-up': {
       id: '/_auth/sign-up'
@@ -132,9 +211,25 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface MainRouteChildren {
+  MainAboutRoute: typeof MainAboutRoute
+  MainBlogsRoute: typeof MainBlogsRoute
+  MainContactRoute: typeof MainContactRoute
+  MainIndexRoute: typeof MainIndexRoute
+}
+
+const MainRouteChildren: MainRouteChildren = {
+  MainAboutRoute: MainAboutRoute,
+  MainBlogsRoute: MainBlogsRoute,
+  MainContactRoute: MainContactRoute,
+  MainIndexRoute: MainIndexRoute,
+}
+
+const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
+  MainRoute: MainRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
