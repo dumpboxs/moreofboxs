@@ -11,7 +11,10 @@ import {
   InputGroupInput,
 } from '@/components/ui/input-group'
 
-type Props = Omit<React.ComponentProps<typeof InputGroupInput>, 'type'>
+type Props = Omit<
+  React.ComponentPropsWithoutRef<typeof InputGroupInput>,
+  'type'
+>
 
 export const InputPassword = (props: Props) => {
   const [showPassword, setShowPassword] = useState<boolean>(false)

@@ -4,7 +4,7 @@ import * as z from 'zod'
 import { requireGuestMiddleware } from '@/middleware/auth'
 
 const redirectSearchSchema = z.object({
-  redirect_to: fallback(z.string().optional(), ''),
+  redirect_to: fallback(z.string().optional(), '').default(),
 })
 export const Route = createFileRoute('/_auth')({
   validateSearch: zodValidator(redirectSearchSchema),

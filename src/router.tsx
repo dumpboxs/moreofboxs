@@ -2,6 +2,7 @@ import { createRouter } from '@tanstack/react-router'
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
 
 import * as TanstackQuery from '@/integrations/tanstack-query/root-provider'
+import { orpc } from '@/orpc/client'
 // Import the generated route tree
 import { routeTree } from '@/routeTree.gen'
 
@@ -11,11 +12,11 @@ export const getRouter = () => {
 
   const router = createRouter({
     routeTree,
-    context: { ...rqContext },
+    context: { ...rqContext, orpc },
     defaultPreload: 'intent',
     Wrap: (props: { children: React.ReactNode }) => {
       return (
-        <TanstackQuery.Provider {...rqContext}>
+        <TanstackQuery.Provider queryClient={rqContext.queryClient}>
           {props.children}
         </TanstackQuery.Provider>
       )
