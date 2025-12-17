@@ -6,7 +6,7 @@ import { createIsomorphicFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import type { OrpcRouterClient } from '@/orpc/router'
 import { orpcRouter } from '@/orpc/router'
-import { createORPCContext } from '@/orpc'
+import { createORPCContext } from '@/orpc/context'
 
 const getORPCClient = createIsomorphicFn()
   .server(() =>

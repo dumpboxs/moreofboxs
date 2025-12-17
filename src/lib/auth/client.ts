@@ -9,11 +9,15 @@ import {
 
 import type { auth } from '@/lib/auth'
 import { env } from '@/configs/env'
+import { ac, roles } from '@/lib/auth/permissions'
 
 export const authClient = createAuthClient({
   baseURL: env.VITE_APP_URL,
   plugins: [
-    adminClient(),
+    adminClient({
+      ac,
+      roles,
+    }),
     anonymousClient(),
     multiSessionClient(),
     usernameClient(),
