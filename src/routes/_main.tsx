@@ -10,7 +10,7 @@ function RouteComponent() {
   return (
     <div className="flex min-h-svh flex-col items-center">
       <MainHeader />
-      <main className="flex grow flex-col">
+      <main className="flex w-full grow flex-col">
         <Outlet />
       </main>
       <MainFooter />

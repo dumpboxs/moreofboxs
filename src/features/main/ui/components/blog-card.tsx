@@ -103,8 +103,9 @@ export const BlogCard = ({
         >
           <AspectRatio ratio={16 / 9} className="overflow-hidden rounded-lg">
             <img
-              src={'https://placehold.co/2560x1080'}
-              width={2560}
+              src={'https://placehold.co/1920x1080'}
+              width={1920}
+              height={1080}
               alt={blog.title}
               className="h-full w-full object-cover"
             />
