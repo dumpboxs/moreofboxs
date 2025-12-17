@@ -23,7 +23,11 @@ interface BlogCardProps extends React.ComponentProps<typeof Card> {
   size?: 'sm' | 'default'
 }
 
-export const BlogCard = ({ blog, size, ...props }: BlogCardProps) => {
+export const BlogCard = ({
+  blog,
+  size = 'default',
+  ...props
+}: BlogCardProps) => {
   const editor = useEditor({
     extensions: [StarterKit],
     content: blog.content,
@@ -97,11 +101,11 @@ export const BlogCard = ({ blog, size, ...props }: BlogCardProps) => {
           params={{ slug: blog.slug }}
           viewTransition={true}
         >
-          <AspectRatio ratio={21 / 9} className="overflow-hidden rounded-lg">
+          <AspectRatio ratio={16 / 9} className="overflow-hidden rounded-lg">
             <img
               src={'https://placehold.co/2560x1080'}
               width={2560}
-              alt={blog.author.name}
+              alt={blog.title}
               className="h-full w-full object-cover"
             />
           </AspectRatio>
