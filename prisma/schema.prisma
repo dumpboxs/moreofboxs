@@ -30,6 +30,7 @@ model User {
 
   sessions Session[]
   accounts Account[]
+  blogs    Blog[]
 
   @@unique([email])
   @@unique([username])
@@ -95,4 +96,31 @@ model Jwks {
   expiresAt  DateTime?
 
   @@map("jwks")
+}
+
+enum BlogStatus {
+  draft
+  published
+}
+
+model Blog {
+  id            String     @id @default(uuid())
+  authorId      String
+  title         String
+  slug          String     @unique
+  content       String
+  viewsCount    Int        @default(0)
+  likesCount    Int        @default(0)
+  commentsCount Int        @default(0)
+  status        BlogStatus @default(draft)
+
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([slug])
+  @@index([status])
+  @@map("blogs")
 }

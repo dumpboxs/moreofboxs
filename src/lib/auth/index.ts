@@ -15,6 +15,7 @@ import { env } from '@/configs/env'
 import { db } from '@/configs/db'
 import { APP_CONSTANTS } from '@/constants'
 import { UserRole } from '@/generated/prisma/enums'
+import { ac, roles } from '@/lib/auth/permissions'
 
 export const auth = betterAuth({
   appName: APP_CONSTANTS.name,
@@ -60,6 +61,8 @@ export const auth = betterAuth({
     adminPlugin({
       adminRoles: [UserRole.admin],
       defaultRole: UserRole.user,
+      ac,
+      roles,
     }),
     anonymousPlugin(),
     bearerPlugin(),

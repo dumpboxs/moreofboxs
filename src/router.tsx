@@ -1,6 +1,7 @@
 import { createRouter } from '@tanstack/react-router'
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
 
+import { DefaultLoadingView } from '@/components/global/default-loading-view'
 import * as TanstackQuery from '@/integrations/tanstack-query/root-provider'
 import { orpc } from '@/orpc/client'
 // Import the generated route tree
@@ -14,6 +15,7 @@ export const getRouter = () => {
     routeTree,
     context: { ...rqContext, orpc },
     defaultPreload: 'intent',
+    defaultPendingComponent: DefaultLoadingView,
     Wrap: (props: { children: React.ReactNode }) => {
       return (
         <TanstackQuery.Provider queryClient={rqContext.queryClient}>

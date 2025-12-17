@@ -6,8 +6,9 @@ import { ZodToJsonSchemaConverter } from '@orpc/zod/zod4'
 import { createFileRoute } from '@tanstack/react-router'
 import { experimental_SmartCoercionPlugin as SmartCoercionPlugin } from '@orpc/json-schema'
 import { orpcRouter } from '@/orpc/router'
-import { createORPCContext } from '@/orpc'
+import { createORPCContext } from '@/orpc/context'
 import { APP_CONSTANTS } from '@/constants'
+import { newBlogSchema } from '@/features/main/schemas/blog.schema'
 
 const rpcHandler = new RPCHandler(orpcRouter, {
   interceptors: [
@@ -35,13 +36,25 @@ const apiHandler = new OpenAPIHandler(orpcRouter, {
         info: {
           title: `${APP_CONSTANTS.name} ORPC API Reference`,
           version: '1.0.0',
+          description: `API Reference for ORPC ${APP_CONSTANTS.name}`,
         },
-        security: [{ bearerAuth: [] }],
+        commonSchemas: {
+          newBlogSchema: { schema: newBlogSchema },
+          UndefinedError: { error: 'UndefinedError' },
+        },
+        security: [{ apiKeyCookie: [], bearerAuth: [] }],
         components: {
           securitySchemes: {
+            apiKeyCookie: {
+              type: 'apiKey',
+              in: 'cookie',
+              name: 'apiKeyCookie',
+              description: 'API Key authentication via cookie',
+            },
             bearerAuth: {
               type: 'http',
               scheme: 'bearer',
+              description: 'Bearer token authentication',
             },
           },
         },
@@ -49,9 +62,8 @@ const apiHandler = new OpenAPIHandler(orpcRouter, {
       docsConfig: {
         authentication: {
           securitySchemes: {
-            bearerAuth: {
-              token: 'default-token',
-            },
+            apiKeyCookie: {},
+            bearerAuth: {},
           },
         },
       },
@@ -73,7 +85,7 @@ async function handle({ request }: { request: Request }) {
   if (rpcResult.response) return rpcResult.response
 
   const apiResult = await apiHandler.handle(request, {
-    prefix: '/api/orpc/api-reference',
+    prefix: '/api/orpc/reference',
     context,
   })
   if (apiResult.response) return apiResult.response
