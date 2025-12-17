@@ -20,6 +20,7 @@ import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
 import { Route as ApiOrpcSplatRouteImport } from './routes/api/orpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
+import { Route as MainBlogsSlugRouteImport } from './routes/_main/blogs.$slug'
 
 const MainRoute = MainRouteImport.update({
   id: '/_main',
@@ -74,15 +75,21 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MainBlogsSlugRoute = MainBlogsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => MainBlogsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/about': typeof MainAboutRoute
-  '/blogs': typeof MainBlogsRoute
+  '/blogs': typeof MainBlogsRouteWithChildren
   '/contact': typeof MainContactRoute
   '/profile': typeof MainProfileRoute
   '/': typeof MainIndexRoute
+  '/blogs/$slug': typeof MainBlogsSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/orpc/$': typeof ApiOrpcSplatRoute
 }
@@ -90,10 +97,11 @@ export interface FileRoutesByTo {
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/about': typeof MainAboutRoute
-  '/blogs': typeof MainBlogsRoute
+  '/blogs': typeof MainBlogsRouteWithChildren
   '/contact': typeof MainContactRoute
   '/profile': typeof MainProfileRoute
   '/': typeof MainIndexRoute
+  '/blogs/$slug': typeof MainBlogsSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/orpc/$': typeof ApiOrpcSplatRoute
 }
@@ -104,10 +112,11 @@ export interface FileRoutesById {
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_auth/sign-up': typeof AuthSignUpRoute
   '/_main/about': typeof MainAboutRoute
-  '/_main/blogs': typeof MainBlogsRoute
+  '/_main/blogs': typeof MainBlogsRouteWithChildren
   '/_main/contact': typeof MainContactRoute
   '/_main/profile': typeof MainProfileRoute
   '/_main/': typeof MainIndexRoute
+  '/_main/blogs/$slug': typeof MainBlogsSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/orpc/$': typeof ApiOrpcSplatRoute
 }
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/profile'
     | '/'
+    | '/blogs/$slug'
     | '/api/auth/$'
     | '/api/orpc/$'
   fileRoutesByTo: FileRoutesByTo
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/profile'
     | '/'
+    | '/blogs/$slug'
     | '/api/auth/$'
     | '/api/orpc/$'
   id:
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/_main/contact'
     | '/_main/profile'
     | '/_main/'
+    | '/_main/blogs/$slug'
     | '/api/auth/$'
     | '/api/orpc/$'
   fileRoutesById: FileRoutesById
@@ -235,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_main/blogs/$slug': {
+      id: '/_main/blogs/$slug'
+      path: '/$slug'
+      fullPath: '/blogs/$slug'
+      preLoaderRoute: typeof MainBlogsSlugRouteImport
+      parentRoute: typeof MainBlogsRoute
+    }
   }
 }
 
@@ -250,9 +269,21 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface MainBlogsRouteChildren {
+  MainBlogsSlugRoute: typeof MainBlogsSlugRoute
+}
+
+const MainBlogsRouteChildren: MainBlogsRouteChildren = {
+  MainBlogsSlugRoute: MainBlogsSlugRoute,
+}
+
+const MainBlogsRouteWithChildren = MainBlogsRoute._addFileChildren(
+  MainBlogsRouteChildren,
+)
+
 interface MainRouteChildren {
   MainAboutRoute: typeof MainAboutRoute
-  MainBlogsRoute: typeof MainBlogsRoute
+  MainBlogsRoute: typeof MainBlogsRouteWithChildren
   MainContactRoute: typeof MainContactRoute
   MainProfileRoute: typeof MainProfileRoute
   MainIndexRoute: typeof MainIndexRoute
@@ -260,7 +291,7 @@ interface MainRouteChildren {
 
 const MainRouteChildren: MainRouteChildren = {
   MainAboutRoute: MainAboutRoute,
-  MainBlogsRoute: MainBlogsRoute,
+  MainBlogsRoute: MainBlogsRouteWithChildren,
   MainContactRoute: MainContactRoute,
   MainProfileRoute: MainProfileRoute,
   MainIndexRoute: MainIndexRoute,

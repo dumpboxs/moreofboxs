@@ -70,12 +70,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootComponent() {
   return (
-    <RootDocument>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <Outlet />
-        <Toaster position="top-center" richColors />
-      </ThemeProvider>
-    </RootDocument>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <Outlet />
+      <Toaster position="top-center" richColors />
+    </ThemeProvider>
   )
 }
 

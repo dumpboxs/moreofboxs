@@ -1,9 +1,12 @@
 import * as z from 'zod'
 import { BlogStatus } from '@/generated/prisma/enums'
 
-const MIN_DEFAULT_LIMIT = 10
+const MIN_DEFAULT_LIMIT = 1
 const MAX_DEFAULT_LIMIT = 100
+const DEFAULT_LIMIT = 10
+
 const MIN_DEFAULT_PAGE = 1
+const DEFAULT_PAGE = 1
 
 const blogStatusSchema = z.enum([BlogStatus.published, BlogStatus.draft])
 const sortBySchema = z.enum([
@@ -52,13 +55,13 @@ export const blogsQuerySchema = z.object({
     .positive()
     .min(MIN_DEFAULT_LIMIT)
     .max(MAX_DEFAULT_LIMIT)
-    .default(MIN_DEFAULT_LIMIT),
+    .default(DEFAULT_LIMIT),
   page: z.coerce
     .number()
     .int()
     .positive()
     .min(MIN_DEFAULT_PAGE)
-    .default(MIN_DEFAULT_PAGE),
+    .default(DEFAULT_PAGE),
   search: z.string().max(100).optional(),
   status: blogStatusSchema.optional(),
   sortByFilter: sortBySchema.default('createdAt'),
