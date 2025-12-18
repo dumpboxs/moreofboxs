@@ -57,11 +57,11 @@ export const BlogCard = ({
           <div className="bg-muted-foreground/50 size-1 rounded-full @max-3xs:hidden" />
 
           <Tooltip delayDuration={250}>
-            <TooltipTrigger>
+            <TooltipTrigger suppressHydrationWarning>
               {formatDistanceToNowStrict(blog.createdAt, { addSuffix: true })}
             </TooltipTrigger>
 
-            <TooltipContent>
+            <TooltipContent suppressHydrationWarning>
               {new Date(blog.createdAt).toLocaleString('en-US', {
                 dateStyle: 'long',
                 timeStyle: 'short',
@@ -71,7 +71,7 @@ export const BlogCard = ({
         </div>
 
         <Link
-          to={`/blogs/$slug`}
+          to="/blogs/$slug"
           params={{ slug: blog.slug }}
           viewTransition={true}
         >
@@ -97,15 +97,15 @@ export const BlogCard = ({
 
       <CardContent className="px-2">
         <Link
-          to={`/blogs/$slug`}
+          to="/blogs/$slug"
           params={{ slug: blog.slug }}
           viewTransition={true}
         >
           <AspectRatio ratio={16 / 9} className="overflow-hidden rounded-lg">
             <img
-              src={'https://placehold.co/1920x1080'}
-              width={1920}
-              height={1080}
+              src={'https://placehold.co/1280x720'}
+              width={1280}
+              height={720}
               alt={blog.title}
               className="h-full w-full object-cover"
             />

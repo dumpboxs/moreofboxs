@@ -1,11 +1,12 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query'
 import { motion } from 'motion/react'
 import type { Variants } from 'motion/react'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import { BlogCard } from '@/features/main/ui/components/blog-card'
 import { cn } from '@/lib/utils'
 import { orpc } from '@/orpc/client'
+import { Route } from '@/routes/_main/blogs'
 
 const listVariant: Variants = {
   to: {
@@ -31,9 +32,21 @@ const itemVariant: Variants = {
 type Props = React.ComponentProps<'section'>
 
 export const BlogsViewSection = ({ className, ...props }: Props) => {
-  const { data: allBlogs } = useSuspenseQuery(
-    orpc.blogs.list.queryOptions({ input: {} }),
-  )
+  const { search, sortBy, sortOrder } = Route.useSearch()
+
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useSuspenseInfiniteQuery(
+      orpc.blogs.list.infiniteOptions({
+        input: (page: number) => ({ page, sortBy, sortOrder, search }),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+          if (lastPage.pagination.totalPages <= lastPageParam) {
+            return undefined
+          }
+          return lastPageParam + 1
+        },
+      }),
+    )
 
   return (
     <section {...props} className={cn('w-full py-6 md:py-10', className)}>
@@ -54,16 +67,20 @@ export const BlogsViewSection = ({ className, ...props }: Props) => {
 
         <motion.ul
           className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3"
-          initial="from"
-          whileInView="to"
-          viewport={{ once: true }}
           variants={listVariant}
         >
-          {allBlogs.items.map((blog) => (
-            <motion.li key={blog.id} variants={itemVariant}>
-              <BlogCard blog={blog} />
-            </motion.li>
-          ))}
+          {data.pages.map((page) =>
+            page.items.map((blog) => (
+              <motion.li
+                key={blog.id}
+                variants={itemVariant}
+                initial="from"
+                animate="to"
+              >
+                <BlogCard blog={blog} />
+              </motion.li>
+            )),
+          )}
         </motion.ul>
       </div>
 
@@ -78,10 +95,20 @@ export const BlogsViewSection = ({ className, ...props }: Props) => {
           },
         }}
       >
-        <Button variant="outline" asChild>
-          <Link to="/blogs" viewTransition={true}>
-            Load More
-          </Link>
+        <Button
+          variant="outline"
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isFetchingNextPage}
+        >
+          {isFetchingNextPage ? (
+            <>
+              <Spinner /> Loading more
+            </>
+          ) : hasNextPage ? (
+            'Load more'
+          ) : (
+            'No more blogs'
+          )}
         </Button>
       </motion.div>
     </section>
