@@ -7,6 +7,7 @@ import {
   sortOrderSchema,
 } from '@/features/main/schemas/blog.schema'
 import { orpc } from '@/orpc/client'
+import { DefaultLoadingView } from '@/components/global/default-loading-view'
 
 const blogsSearchSchema = z.object({
   sortBy: z.optional(fallback(sortBySchema, 'createdAt')),
@@ -16,14 +17,15 @@ const blogsSearchSchema = z.object({
 
 export const Route = createFileRoute('/_main/blogs')({
   component: BlogsView,
+  pendingComponent: DefaultLoadingView,
   validateSearch: zodValidator(blogsSearchSchema),
   loaderDeps: ({ search }) => ({
     sortBy: search.sortBy,
     sortOrder: search.sortOrder,
     search: search.search,
   }),
-  loader: ({ context, deps: { search, sortBy, sortOrder } }) => {
-    context.queryClient.ensureInfiniteQueryData(
+  loader: async ({ context, deps: { search, sortBy, sortOrder } }) => {
+    await context.queryClient.ensureInfiniteQueryData(
       orpc.blogs.list.infiniteOptions({
         input: (page: number) => ({ page, sortBy, sortOrder, search }),
         initialPageParam: 1,
