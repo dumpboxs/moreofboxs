@@ -1,14 +1,16 @@
 import DOMPurify from 'isomorphic-dompurify'
+import { ORPCError } from '@orpc/client'
 import type { Prisma } from '@/generated/prisma/client'
 import {
+  blogBySlugParamSchema,
   blogsQuerySchema,
   createBlogSchema,
   newBlogSchema,
 } from '@/features/main/schemas/blog.schema'
-import { adminProcedure, publicProcedure } from '@/orpc'
+import { adminProcedure, publicProcedure, rolesProcedure } from '@/orpc'
 import { createUniqueSlug } from '@/utils/slug-generator'
 import { auth } from '@/lib/auth'
-import { BlogStatus } from '@/generated/prisma/enums'
+import { BlogStatus, UserRole } from '@/generated/prisma/enums'
 
 export const blogsRouter = {
   list: publicProcedure
@@ -92,6 +94,52 @@ export const blogsRouter = {
           totalItems: totalBlogs,
         },
       }
+    }),
+
+  getOneBySlug: rolesProcedure
+    .route({
+      method: 'GET',
+      path: '/blogs/{slug}',
+      description: 'Get a blog by slug',
+      summary: 'Get a blog by slug',
+      tags: ['Blogs'],
+    })
+    .input(blogBySlugParamSchema)
+    .output(newBlogSchema)
+    .handler(async ({ context, input }) => {
+      const blog = await context.db.blog.findUnique({
+        where: { slug: input.slug },
+        include: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              username: true,
+            },
+          },
+        },
+      })
+
+      if (!blog) {
+        throw new ORPCError('NOT_FOUND', {
+          status: 404,
+          message: 'Blog not found',
+        })
+      }
+
+      if (
+        context.auth.user.role === UserRole.user &&
+        blog.status === BlogStatus.draft &&
+        blog.authorId === context.auth.user.id
+      ) {
+        throw new ORPCError('FORBIDDEN', {
+          status: 403,
+          message: 'You are not allowed to view this blog',
+        })
+      }
+
+      return blog
     }),
 
   create: adminProcedure

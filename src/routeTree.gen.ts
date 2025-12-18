@@ -20,7 +20,7 @@ import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
 import { Route as ApiOrpcSplatRouteImport } from './routes/api/orpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
-import { Route as MainBlogsSlugRouteImport } from './routes/_main/blogs.$slug'
+import { Route as MainBlogsSlugRouteImport } from './routes/_main/blogs_.$slug'
 
 const MainRoute = MainRouteImport.update({
   id: '/_main',
@@ -76,16 +76,16 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const MainBlogsSlugRoute = MainBlogsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => MainBlogsRoute,
+  id: '/blogs_/$slug',
+  path: '/blogs/$slug',
+  getParentRoute: () => MainRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/about': typeof MainAboutRoute
-  '/blogs': typeof MainBlogsRouteWithChildren
+  '/blogs': typeof MainBlogsRoute
   '/contact': typeof MainContactRoute
   '/profile': typeof MainProfileRoute
   '/': typeof MainIndexRoute
@@ -97,7 +97,7 @@ export interface FileRoutesByTo {
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/about': typeof MainAboutRoute
-  '/blogs': typeof MainBlogsRouteWithChildren
+  '/blogs': typeof MainBlogsRoute
   '/contact': typeof MainContactRoute
   '/profile': typeof MainProfileRoute
   '/': typeof MainIndexRoute
@@ -112,11 +112,11 @@ export interface FileRoutesById {
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_auth/sign-up': typeof AuthSignUpRoute
   '/_main/about': typeof MainAboutRoute
-  '/_main/blogs': typeof MainBlogsRouteWithChildren
+  '/_main/blogs': typeof MainBlogsRoute
   '/_main/contact': typeof MainContactRoute
   '/_main/profile': typeof MainProfileRoute
   '/_main/': typeof MainIndexRoute
-  '/_main/blogs/$slug': typeof MainBlogsSlugRoute
+  '/_main/blogs_/$slug': typeof MainBlogsSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/orpc/$': typeof ApiOrpcSplatRoute
 }
@@ -156,7 +156,7 @@ export interface FileRouteTypes {
     | '/_main/contact'
     | '/_main/profile'
     | '/_main/'
-    | '/_main/blogs/$slug'
+    | '/_main/blogs_/$slug'
     | '/api/auth/$'
     | '/api/orpc/$'
   fileRoutesById: FileRoutesById
@@ -247,12 +247,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_main/blogs/$slug': {
-      id: '/_main/blogs/$slug'
-      path: '/$slug'
+    '/_main/blogs_/$slug': {
+      id: '/_main/blogs_/$slug'
+      path: '/blogs/$slug'
       fullPath: '/blogs/$slug'
       preLoaderRoute: typeof MainBlogsSlugRouteImport
-      parentRoute: typeof MainBlogsRoute
+      parentRoute: typeof MainRoute
     }
   }
 }
@@ -269,32 +269,22 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
-interface MainBlogsRouteChildren {
-  MainBlogsSlugRoute: typeof MainBlogsSlugRoute
-}
-
-const MainBlogsRouteChildren: MainBlogsRouteChildren = {
-  MainBlogsSlugRoute: MainBlogsSlugRoute,
-}
-
-const MainBlogsRouteWithChildren = MainBlogsRoute._addFileChildren(
-  MainBlogsRouteChildren,
-)
-
 interface MainRouteChildren {
   MainAboutRoute: typeof MainAboutRoute
-  MainBlogsRoute: typeof MainBlogsRouteWithChildren
+  MainBlogsRoute: typeof MainBlogsRoute
   MainContactRoute: typeof MainContactRoute
   MainProfileRoute: typeof MainProfileRoute
   MainIndexRoute: typeof MainIndexRoute
+  MainBlogsSlugRoute: typeof MainBlogsSlugRoute
 }
 
 const MainRouteChildren: MainRouteChildren = {
   MainAboutRoute: MainAboutRoute,
-  MainBlogsRoute: MainBlogsRouteWithChildren,
+  MainBlogsRoute: MainBlogsRoute,
   MainContactRoute: MainContactRoute,
   MainProfileRoute: MainProfileRoute,
   MainIndexRoute: MainIndexRoute,
+  MainBlogsSlugRoute: MainBlogsSlugRoute,
 }
 
 const MainRouteWithChildren = MainRoute._addFileChildren(MainRouteChildren)

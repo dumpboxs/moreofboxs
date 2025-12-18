@@ -67,3 +67,7 @@ export const blogsQuerySchema = z.object({
   sortByFilter: sortBySchema.default('createdAt'),
   sortOrderFilter: sortOrderSchema.default('desc'),
 })
+
+export const blogBySlugParamSchema = z.object({
+  slug: z.string(),
+})

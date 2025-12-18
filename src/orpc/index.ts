@@ -13,3 +13,8 @@ export const protectedProcedure = o.use(timingMiddleware).use(requireAuth)
 
 // Admin procedure (authenticated and admin)
 export const adminProcedure = o.use(timingMiddleware).use(requiredRole('admin'))
+
+// Roles procedure (authenticated and roles)
+export const rolesProcedure = o
+  .use(timingMiddleware)
+  .use(requiredRole(['admin', 'user']))
