@@ -7,7 +7,7 @@ import {
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Link, getRouteApi, useLocation } from '@tanstack/react-router'
-import { EditorContent, useEditor } from '@tiptap/react'
+import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { Button } from '@/components/ui/button'
 import { AvatarUser } from '@/components/global/avatar-user'
@@ -15,6 +15,7 @@ import { Separator } from '@/components/ui/separator'
 import { getReadTime } from '@/utils/read-time'
 import { ShareMenuDropdown } from '@/features/main/components/share-menu-dropdown'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { MarkdownRenderer } from '@/components/global/markdown-renderer'
 
 const route = getRouteApi('/_main/blogs_/$slug')
 
@@ -113,7 +114,7 @@ export const BlogBySlugView = () => {
           </AspectRatio>
         </div>
 
-        <EditorContent editor={editor} />
+        <MarkdownRenderer content={blog.content} />
       </article>
     </div>
   )

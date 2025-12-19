@@ -15,6 +15,8 @@ export const getRouter = () => {
     routeTree,
     context: { ...rqContext, orpc },
     defaultPreload: 'intent',
+    scrollRestoration: true,
+    defaultHashScrollIntoView: true,
     defaultPendingComponent: DefaultLoadingView,
     Wrap: (props: { children: React.ReactNode }) => {
       return (
